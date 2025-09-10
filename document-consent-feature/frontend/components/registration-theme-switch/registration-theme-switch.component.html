@@ -1,0 +1,7 @@
+<div class="flex items-center gap-2">
+    <p-toggleswitch [(ngModel)]="selectedTheme">
+        <ng-template #handle let-checked="checked">
+            <i [class]="['!text-xs', 'pi', checked ? 'pi-moon' : 'pi-sun']"></i>
+        </ng-template>
+    </p-toggleswitch>
+</div>

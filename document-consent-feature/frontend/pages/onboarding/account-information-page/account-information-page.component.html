@@ -1,0 +1,60 @@
+<!-- Main Content -->
+<div class="relative mx-auto w-full max-w-2xl pb-6">
+    @if (isRegistrationPending()) {
+        <div
+            class="absolute inset-0 z-50 -mx-6 -mt-6 flex animate-fadein items-center justify-center overflow-hidden rounded-lg">
+            <div class="size-full bg-neutral-700/50 text-white dark:bg-neutral-900/70">
+                <app-loading-placeholder />
+            </div>
+        </div>
+    }
+
+    <div class="mb-4">
+        <h1 class="text-xl font-semibold text-neutral-900 dark:text-white">Tell us about yourself</h1>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+            We prefilled your information with the information from your Microsoft Teams account.
+        </p>
+    </div>
+
+    <!-- Profile Section -->
+    <app-user-general-information class="mb-12" />
+
+    <!-- Additional Information -->
+    <div class="mb-12">
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">Additional Information</h2>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                This information is optional and will not be shared with anyone outside of the company.
+            </p>
+        </div>
+
+        <app-user-additional-information />
+    </div>
+
+    <!-- Contact Information -->
+    <div class="mb-8">
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">Contact Information</h2>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                This information is optional and will not be shared with anyone outside of the company.
+            </p>
+        </div>
+
+        <app-user-contact-information />
+    </div>
+
+    <!-- Next Button -->
+    @if (authenticatedUser) {
+        <p-button
+            styleClass="w-full border-blue-600 dark:border-blue-700 bg-blue-600 hover:bg-blue-700 text-white"
+            routerLink="/registration/onboarding/agreements">
+            Continue
+        </p-button>
+    } @else {
+        <p-button
+            (click)="onSubmit()"
+            styleClass="w-full border-blue-600 dark:border-blue-700 bg-blue-600 hover:bg-blue-700 text-white">
+            Register
+        </p-button>
+    }
+</div>

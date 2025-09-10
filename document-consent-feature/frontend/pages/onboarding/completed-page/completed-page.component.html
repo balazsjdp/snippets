@@ -1,0 +1,117 @@
+<div class="mx-auto w-full max-w-2xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+        <div
+            class="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30"
+            id="confetti-canvas">
+            <svg
+                class="size-8 text-green-600 dark:text-green-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <h1 class="text-2xl font-semibold text-neutral-900 dark:text-white">Setup Complete!</h1>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+            Your account has been successfully set up and you're ready to start using the REMOVED.
+        </p>
+    </div>
+
+    <!-- Account Summary -->
+    <p-panel header="Account Summary" styleClass="mb-8 [&_.p-panel-title]:text-lg [&_.p-panel-title]:font-medium">
+        <div class="space-y-3">
+            <div class="flex items-center">
+                <span class="text-sm text-neutral-600 dark:text-neutral-400">Name:</span>
+                <span class="ml-2 text-sm text-neutral-900 dark:text-white">
+                    {{ authenticatedUser?.firstName + ' ' + authenticatedUser?.lastName }}
+                </span>
+            </div>
+            <div class="flex items-center">
+                <span class="text-sm text-neutral-600 dark:text-neutral-400">Email:</span>
+                <span class="ml-2 text-sm text-neutral-900 dark:text-white">
+                    {{ authenticatedUser?.email }}
+                </span>
+            </div>
+            <div class="flex items-center">
+                <span class="text-sm text-neutral-600 dark:text-neutral-400">Department:</span>
+                <span class="ml-2 text-sm text-neutral-900 dark:text-white">
+                    {{ authenticatedUser?.team?.name }}
+                </span>
+            </div>
+            <div class="flex items-center">
+                <span class="text-sm text-neutral-600 dark:text-neutral-400">Office Location:</span>
+                <span class="ml-2 text-sm text-neutral-900 dark:text-white">
+                    {{ authenticatedUser?.location?.city }}
+                </span>
+            </div>
+        </div>
+    </p-panel>
+
+    <p-panel
+        header="Next Steps"
+        styleClass="mb-8 [&_.p-panel-title]:text-lg [&_.p-panel-title]:font-medium [&_.p-panel-title]:dark:text-blue-100 [&_.p-panel-title]:text-blue-900 dark:bg-blue-900/20 bg-blue-100 dark:border-blue-900/20">
+        <ul class="ml-6 list-disc space-y-2 text-sm text-blue-800 dark:text-blue-200">
+            <li>Explore the dashboard to familiarize yourself with the portal</li>
+            <li>Complete your profile by adding additional information</li>
+            <li>Review available services and support options</li>
+        </ul>
+    </p-panel>
+
+    <!-- Action Button -->
+    @if (registrationError()?.length) {
+        <p class="mt-4 text-center text-sm text-red-600 dark:text-red-400">
+            {{ registrationError() }}
+        </p>
+    } @else if (!isUserRegistered()) {
+        <div
+            class="mt-4 w-full rounded-lg border border-neutral-300 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
+            <div class="flex items-center justify-center text-sm text-neutral-600 dark:text-neutral-400">
+                <svg
+                    class="-ml-1 mr-3 size-5 animate-spin text-neutral-600 dark:text-neutral-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                @if (!isUserRegistered()) {
+                    <span>User registration in progress...</span>
+                } @else {
+                    <span>The application is loading...</span>
+                }
+            </div>
+        </div>
+        <p class="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
+            @if (timer() < 180) {
+                The initial application load may take several minutes depending on your internet connection speed.
+            } @else {
+                <p class="mt-4 text-center text-sm text-neutral-600 dark:text-neutral-400">
+                    This is taking longer than expected.
+                    <a class="text-blue-600 hover:underline dark:text-blue-400" href="/">Please refresh the page.</a>
+                </p>
+            }
+        </p>
+    } @else {
+        <p-button
+            styleClass="w-full border-blue-600 dark:border-blue-700 bg-blue-600 hover:bg-blue-700 text-white"
+            routerLink="/shiftplan">
+            Go to Shiftplan
+        </p-button>
+    }
+
+    <div class="mt-4 h-px border-t border-neutral-300 dark:border-neutral-700"></div>
+
+    <!-- Support Link -->
+    <p class="mt-4 text-center text-sm text-neutral-600 dark:text-neutral-400">
+        Need help?
+        <a
+            class="text-blue-600 hover:underline dark:text-blue-400"
+            href="REMOVED">
+            Contact support
+        </a>
+    </p>
+</div>

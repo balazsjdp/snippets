@@ -1,0 +1,32 @@
+<div class="absolute right-5 top-5 z-10">
+    <app-registration-theme-switch />
+</div>
+
+<div class="min-h-screen bg-surface-100 px-6 pt-6 dark:bg-neutral-900">
+    <img class="mx-auto mb-6 h-16" src="assets/images/aldi-transparent.png" alt="AIIS Portal Logo" />
+
+    <!-- Progress Steps -->
+    <div class="mx-auto mb-12 flex w-full max-w-2xl items-center justify-between">
+        @for (step of steps; track step.path) {
+            <div class="flex flex-col items-center">
+                <div
+                    class="flex size-8 items-center justify-center rounded-full"
+                    [ngClass]="{
+                        'bg-brand text-white dark:bg-brand-light': router.url.includes(step.path),
+                        'bg-neutral-300 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-400':
+                            !router.url.includes(step.path),
+                    }">
+                    {{ $index + 1 }}
+                </div>
+                <span class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{{ step.label }}</span>
+            </div>
+            @if (!$last) {
+                <div class="mx-4 h-[2px] flex-1 bg-neutral-300 dark:bg-neutral-700"></div>
+            }
+        }
+    </div>
+
+    <router-outlet />
+</div>
+
+<p-toast />

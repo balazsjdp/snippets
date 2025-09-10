@@ -1,0 +1,76 @@
+<div class="mx-auto w-full max-w-2xl pb-6">
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="text-xl font-semibold text-neutral-900 dark:text-white">Required Agreements</h1>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+            Please review and accept the following agreements to continue.
+        </p>
+    </div>
+
+    <!-- Agreements List -->
+    <div class="space-y-6">
+        @if (documentList() === null) {
+            <div
+                class="rounded-lg border border-neutral-300 px-4 py-6 text-center text-neutral-600 shadow dark:border-neutral-700 dark:text-neutral-400">
+                <app-loading-placeholder [showLoadingLabel]="false" />
+                <h3 class="mt-2 text-sm font-medium">Loading documents...</h3>
+                <p class="mt-1 text-sm">Please wait while we load your documents.</p>
+            </div>
+        } @else {
+            @for (document of documentList(); track document.id) {
+                @let userResponse = document.versions | userResponded;
+                <app-document-card
+                    [routerLink]="'/registration/onboarding/agreements/' + document.id"
+                    [title]="document.title"
+                    [icon]="document.icon"
+                    [description]="document.description"
+                    [status]="userResponse[0] ? DocumentCardStatus.ACCEPTED : DocumentCardStatus.ACTION_REQUIRED" />
+            } @empty {
+                <p-panel styleClass="text-center">
+                    <ng-icon class="mx-auto text-4xl" name="faSolidFileCircleXmark" />
+                    <h3 class="mt-2 text-sm font-medium">No documents found.</h3>
+                    <p class="mt-1 text-sm">
+                        Please
+                        <a
+                            class="font-medium text-brand hover:text-brand/80 hover:underline dark:text-brand-light dark:hover:text-brand-light/80"
+                            target="_blank"
+                            href="REMOVED">
+                            Contact support
+                        </a>
+                        .
+                    </p>
+                </p-panel>
+            }
+        }
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 grid grid-cols-2 gap-4">
+        <p-button
+            class="grid-cols-1"
+            styleClass="w-full"
+            severity="secondary"
+            variant="outlined"
+            routerLink="/registration/onboarding/account-information">
+            Back to Account Information
+        </p-button>
+        @if (!isEveryDocumentSigned()) {
+            <p-button
+                class="grid-cols-1"
+                disabled
+                styleClass="w-full whitespace-nowrap border-dashed"
+                severity="secondary"
+                variant="outlined">
+                You need to sign all documents to continue.
+            </p-button>
+        } @else {
+            <p-button
+                class="grid-cols-1"
+                (click)="onContinue()"
+                styleClass="w-full border-blue-600 dark:border-blue-700 bg-blue-600 hover:bg-blue-700 text-white"
+                routerLink="/registration/onboarding/completed">
+                Continue
+            </p-button>
+        }
+    </div>
+</div>

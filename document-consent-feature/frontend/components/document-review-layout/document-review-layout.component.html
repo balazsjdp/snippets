@@ -1,0 +1,100 @@
+@if (showThemeSwitch()) {
+    <div class="absolute right-5 top-4 z-10">
+        <app-registration-theme-switch />
+    </div>
+}
+
+@if (showBreadcrumbs()) {
+    <app-document-breadcrumbs
+        class="mb-4 flex w-full border-b border-neutral-200 p-4 dark:border-neutral-800"
+        [breadcrumbs]="documentBreadcrumbs()"
+        [showLogo]="true" />
+}
+@if (isDocumentLoading()) {
+    <div
+        class="flex h-[calc(100vh-52px)] items-center justify-center rounded-lg px-4 py-6 text-center text-neutral-600 dark:text-neutral-400">
+        <div>
+            <app-loading-placeholder [showLoadingLabel]="false" />
+            <h3 class="mt-2 text-sm font-medium">Please wait while we load your document.</h3>
+        </div>
+    </div>
+} @else {
+    <div class="relative mx-auto w-full max-w-7xl animate-fade px-4 lg:px-0" [class.pt-4]="!showBreadcrumbs()">
+        <!-- Table of Contents and Content Grid -->
+        <div class="h-full lg:grid lg:grid-cols-12 lg:gap-8">
+            <!-- Table of Contents Sidebar -->
+            <app-table-of-contents
+                class="contents"
+                [documentSections]="documentSections()"
+                [activeSection]="activeSection()"
+                [backToDocumentsUrl]="backUrl()"
+                (activeSectionChange)="scrollToSection($event)" />
+
+            <!-- Main Content -->
+            <div
+                class="flex flex-col pb-24 lg:col-span-9 lg:pb-0"
+                id="document-content"
+                [ngClass]="{
+                    'h-[calc(100vh-5rem)]': showBreadcrumbs(),
+                    'h-[calc(100vh-1rem)]': !showBreadcrumbs(),
+                }">
+                <app-document-heading
+                    class="contents"
+                    [(selectedDocumentVariant)]="selectedDocumentVariant"
+                    [title]="document()?.title"
+                    [description]="document()?.description"
+                    [documentVariants]="documentVariants() ?? []" />
+
+                <div
+                    class="prose prose-neutral max-w-none overflow-y-auto dark:prose-invert [&>section]:mr-2"
+                    #contentContainer>
+                    @for (content of documentContent(); track content.id) {
+                        <section [id]="content.id" [class.mt-4]="$first && documentContent()!.length === 1">
+                            @if (documentContent()!.length > 1) {
+                                <h2 [class.mt-4]="$first">{{ content.title }}</h2>
+                            }
+                            <div [innerHTML]="content.content"></div>
+                            @if (content.statements.length > 0) {
+                                <div class="mt-4 space-y-2">
+                                    @for (statement of content.statements; track statement.id) {
+                                        <app-document-action
+                                            [allowedToEditChoices]="allowedToEditChoices()"
+                                            [statement]="statement"
+                                            (userChoiceChange)="onStatementChange(statement.id, $event)" />
+                                    }
+                                </div>
+                            }
+                        </section>
+                    }
+                </div>
+                <div class="absolute inset-x-0 bottom-0 mt-auto lg:relative">
+                    <div
+                        class="relative flex w-full items-center gap-4 border-t px-6 py-4 dark:border-neutral-800 lg:px-0">
+                        @for (statement of documentGlobalStatements(); track statement.id) {
+                            <app-document-action
+                                [allowedToEditChoices]="allowedToEditChoices()"
+                                [statement]="statement"
+                                (userChoiceChange)="onStatementChange(statement.id, $event)" />
+                        }
+                        <span
+                            class="ml-auto"
+                            [pTooltip]="'Please review all statements before continuing'"
+                            [tooltipStyleClass]="'min-w-64'"
+                            [tooltipPosition]="'top'"
+                            [tooltipDisabled]="allStatementsFulfilled()"
+                            [positionTop]="-5">
+                            <p-button
+                                [loading]="isDocumentSaving()"
+                                [disabled]="!allStatementsFulfilled()"
+                                (click)="saveDocument()"
+                                styleClass="border-blue-600 dark:border-blue-700 bg-blue-600 hover:bg-blue-700 text-white"
+                                type="button">
+                                Continue
+                            </p-button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
